@@ -47,17 +47,11 @@ def convertToLabel(input):
 
 
 def index(request):
-    return render(request, "predict/index.html")
-
-def predict(request):
-    SVM = joblib.load('SVM.joblib')
-    KNN = joblib.load('KNN.joblib')
-    LR = joblib.load('LR.joblib')
-    vectorizer = joblib.load('vectorizer.joblib')
-        
-
-
     if request.method =='POST':
+        SVM = joblib.load('model/SVM.joblib')
+        KNN = joblib.load('model/KNN.joblib')
+        LR = joblib.load('model/LR.joblib')
+        vectorizer = joblib.load('model/vectorizer.joblib')
         input = request.POST.get('review')
 
         input = tokenizingText(input)
@@ -68,11 +62,13 @@ def predict(request):
 
         input = vectorizer.transform(input)
 
-        return render(request, "predict/hasil.html",{
+        return render(request, "predict/index.html",{
             'SVM':convertToLabel(SVM.predict(input)),
             'KNN':convertToLabel(KNN.predict(input)),
             'LR':convertToLabel(LR.predict(input))
         })
+    else:
+        return render(request, "predict/index.html")
 
 
 
